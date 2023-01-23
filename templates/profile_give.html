@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+</head>
+<body>
+
+<div class="bodyDiv">
+    <div class="topnav">
+        <a class="active" href={{ url_for("index") }}>Главная</a>
+
+        <a class="aProf" href={{ url_for("my_books") }}>Мои книги</a>
+        <a class="aProf" href={{ url_for("requests") }}>Заявки</a>
+        <a class="aProf" href={{ url_for("give_books") }}>На отдачу</a>
+
+        <a href="">Войти</a>
+        <a href="">Регистрация</a>
+    </div>
+
+    <div id="ads">
+
+        {% for book in book_list %}
+            <div class="add">
+                <div class="imgBook">
+                    <img src="https://gl-img.rg.ru/uploads/images/2016/04/19/61c012a02e0e5d8.jpg" alt="">
+                </div>
+
+                <div class="bookInfo">
+                    <a font-weight="bold" ;>Информация о книге</a>
+                    <a>Название:</a>
+                    <a>Жанр</a>
+                    <a>Автор:</a>
+                    <a>Язык:</a>
+                    <a>Цена:</a>
+                    <a>Описание:</a>
+                    <a>Пользователь:</a>
+                    <a>Мессенджер пользователя:</a>
+                </div>
+
+                <div class="bookInfo">
+                    <br>
+                    {% for x in book[:-2] %}
+                        <a>{{ x }}</a>
+                    {% endfor %}
+                </div>
+
+                <div class="requestButton">
+                    <button onclick="fetch('/give_button?book_id={{ book[-2] }}&user_id={{ book[-1] }}&su_status=3').then(res => {
+                            location.reload()
+                            })">Отказать
+                    </button>
+
+                    <button onclick="fetch('/give_button?book_id={{ book[-2] }}&user_id={{ book[-1] }}&su_status=1').then(res => {
+                            location.reload()
+                            })">Принять
+                    </button>
+
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

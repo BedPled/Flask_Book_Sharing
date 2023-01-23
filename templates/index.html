@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="RU">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="bodyDiv">
+
+    <div class="topnav">
+        <a class="active" href={{ url_for("index") }}>Главная</a>
+
+        <a class="aProf" href={{ url_for("my_books") }}>Мои книги</a>
+        <a class="aProf" href={{ url_for("requests") }}>Заявки</a>
+        <a class="aProf" href={{ url_for("give_books") }}>На отдачу</a>
+
+        <a href="">Войти</a>
+        <a href="">Регистрация</a>
+    </div>
+
+    <div id="topSite">
+        <div id="selects">
+
+            {#            <select id="country">#}
+            {#                <option value="">Страна</option>#}
+            {##}
+            {#                {% for country in country_list %}#}
+            {#                    <option value='{{ country }}' onclick='location=value'>#}
+            {#                        {{ country }}#}
+            {#                    </option>#}
+            {#                {% endfor %}#}
+            {##}
+            {#            </select>#}
+
+            <select id="city">
+                <option value="">Город</option>
+
+                {% for country in country_list %}
+                    <optgroup label='{{ country[1] }}'>
+                        {% for city in city_list %}
+                            {% if city[2] == country[0] %}
+                                <option value='{{ city[1] }}' onclick='location=value'>
+                                    {{ city[1] }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+
+
+            </select>
+
+            <select id="genre">
+                <option value="">Жанр</option>
+
+                {% for genre in genre_list %}
+                    <option value='{{ genre }}' onclick='location=value'>
+                        {{ genre }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+            <select id="language">
+                <option value="">Язык</option>
+
+                {% for language in language_list %}
+                    <option value='{{ language }}' onclick='location=value'>
+                        {{ language }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div id="inputs">
+            <input class="txtIn" type="text" id="authorIn" name="authorIn" placeholder="Автор"><br><br>
+            <input class="txtIn" type="text" id="booknameIn" name="booknameIn" placeholder="Название книги"><br><br>
+            <input class="button-27" type="submit" value="ПОИСК">
+        </div>
+    </div>
+
+    <div id="ads">
+        <br><br><br>
+        <a id="adsText">ОБЪЯВЛЕНИЯ</a>
+
+        {% for book in book_list %}
+
+            <div class="add">
+                <div class="imgBook">
+                    <img src="https://gl-img.rg.ru/uploads/images/2016/04/19/61c012a02e0e5d8.jpg" alt="">
+                </div>
+
+                <div class="bookInfo">
+                    <a font-weight="bold" ;>Информация о книге</a>
+                    <a>Название:</a>
+                    <a>Жанр</a>
+                    <a>Автор:</a>
+                    <a>Язык:</a>
+                    <a>Цена:</a>
+                    <a>Описание:</a>
+                    <a>Местоположение:</a>
+                </div>
+
+                <div class="bookInfo">
+                    <br>
+                    {% for x in book[:-2] %}
+                        <a>{{ x }}</a>
+                    {% endfor %}
+                </div>
+
+                {% if book[-2] != USER_ID %}
+                    <div class="requestButton">
+                        <button id="req" onclick="fetch('/req_button?book_id={{ book[-1] }}').then(res => {
+                                location.reload()
+                        })" >Запросить</button>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+</body>
+
+<script>
+    let button27 = document.querySelector(".button-27")
+    button27.addEventListener("click", (e) => {
+        let city = document.getElementById("city").value
+        let genre = document.getElementById("genre").value
+        let lang = document.getElementById("language").value
+        let author = document.getElementById("authorIn").value
+        let title = document.getElementById("booknameIn").value
+
+        let new_loc = `http://127.0.0.1:5000?city=${city}&genre=${genre}&lang=${lang}&author=${author}&title=${title}`
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000",
+            data: {
+                'city': city,
+                'genre': genre,
+                'lang': lang,
+                'author': author,
+                'title': title
+            },
+
+            success: function (result) {
+                console.log(result)
+                window.location = new_loc
+            }
+        });
+    })
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</html>
